@@ -6,7 +6,53 @@
   
   <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.34/browser.min.js"></script>
   <script type="text/babel">
-
+  const handleResponse = (xhr, parseResponse) =>{
+  const content = document.querySelector('#content');
+  
+  const obj = xhr.response;
+  
+  console.dir(obj);
+  content.innerHTML = xhr.status + ' ' +obj;
+  };
+  
+  const requestUpdate= (e, page, type) => {
+    
+    const xhr = new XMLHttpRequest();
+    
+    xhr.open('GET', page.value);
+    
+    
+    
+    if(type.value == 'JSON'){
+    xhr.setRequestHeader('Accept', 'application/json');
+    xhr.onload = () => handleResponse(xhr, true);
+    } else {
+    xhr.setRequestHeader('Accept', 'application/xml');
+    xhr.onload = () => handleResponse(xhr, false);
+    }
+    
+    
+    xhr.send();
+    
+    e.preventDefault();
+    
+    return false;
+  }
+  
+  const init = () => {
+    const page = document.querySelector('#page');
+    
+    const type = document.querySelector('#type');
+    
+    const send = document.querySelector('#send');
+    
+    const getPage = (e) => requestUpdate(e, page, type);
+    
+    send.addEventListener('click', getPage);
+  };
+  
+  window.onload = init;
+  
   </script>
 </head>
 <body>
